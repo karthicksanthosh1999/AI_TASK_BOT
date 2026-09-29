@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp, integer, varchar } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -8,5 +8,17 @@ export const users = pgTable("users", {
   credets: integer("credets").default(5)
 });
 
+export const AgentConfig = pgTable("agentConfig", {
+  id: serial("id").primaryKey(),
+  agentId: varchar("agentId").notNull().unique(),
+  name: varchar("name").notNull(),
+  description: text("description"),
+  agentImage: text("agentImage"),
+  userEmail: text('userEmail').notNull().references(()=>users.email),
+
+  createAt: timestamp("created_at").defaultNow().notNull(),
+})
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+export type AgentConfig = typeof AgentConfig.$inferSelect;
